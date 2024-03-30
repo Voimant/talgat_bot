@@ -7,6 +7,8 @@ import aiocron
 from aiogram import Bot, Dispatcher
 import time
 import datetime
+from aiogram.exceptions import TelegramForbiddenError
+
 
 from count_day import get_day
 from db_func import conn
@@ -29,12 +31,18 @@ async def autos():
                 for group_id in list_group_id():
                     try:
                         if int(group_id) < 0:
-                            await bot.send_photo(group_id, photo=picture, caption=text)
+                            try:
+                                await bot.send_photo(group_id, photo=picture, caption=text)
+                            except TelegramForbiddenError:
+                                pass
                         else:
                             pass
                     except Exception as e:
                         if int(group_id) < 0:
-                            await bot.send_message(group_id, text)
+                            try:
+                                await bot.send_message(group_id, text)
+                            except TelegramForbiddenError:
+                                pass
                         else:
                             pass
                 time.sleep(350) # Интервал между объявлениями
