@@ -1,0 +1,87 @@
+from aiogram import Router, F, Bot
+from aiogram.types import Message, CallbackQuery
+
+from DB.db_func import conn
+from DB.main_db import insert_subscription_days
+from config import TOKEN, U_TOKEN
+from keyboards.keyboards import main_menu_markup
+from aiogram.types import LabeledPrice, ContentType, PreCheckoutQuery
+
+
+router = Router()
+router.message.filter(
+    F.chat.type == "private"
+)
+bot = Bot(token=TOKEN)
+price_300 = LabeledPrice(label='учимся платить', amount=300*100)
+price_2000 = LabeledPrice(label='учимся платить', amount=2000*100)
+price_8000 = LabeledPrice(label='учимся платить', amount=8000*100)
+
+
+
+@router.callback_query(F.data == 'pay_300')
+async def pay_300(call: CallbackQuery):
+    await bot.send_invoice(chat_id=call.from_user.id,
+                           title='Разовое объявление',
+                           description='Разовое объявление во всех группах',
+                           provider_token=U_TOKEN,
+                           currency='RUB',
+                           payload='300_rub',
+                           prices=[price_300]
+                           )
+
+
+@router.callback_query(F.data == 'pay_2000')
+async def pay_2000(call: CallbackQuery):
+    await bot.send_invoice(chat_id=call.from_user.id,
+                           title='Неделя постов',
+                           description='Посты публикуются во всех группах, 2 раза в день ( 7 дней)',
+                           provider_token=U_TOKEN,
+                           currency='RUB',
+                           payload='2000_rub',
+                           prices=[price_2000],
+                           )
+
+
+@router.callback_query(F.data == 'pay_8000')
+async def pay_8000(call: CallbackQuery):
+    await bot.send_invoice(chat_id=call.from_user.id,
+                           title='Подписка на 30 дней',
+                           description='Посты публикуются во всех группах, 2 раза в день (30 дней)',
+                           provider_token=U_TOKEN,
+                           currency='RUB',
+                           payload='8000_rub',
+                           prices=[price_8000]
+                           )
+
+
+@router.pre_checkout_query()
+async def pre_check_1(pre_checkout_query: PreCheckoutQuery):
+    await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+
+
+@router.message(F.successful_payment)
+async def process_pay(mess: Message):
+    if mess.successful_payment.invoice_payload == '300_rub':
+        await mess.answer('Оплата получена, объявление поставлено в очередь', reply_markup=main_menu_markup)
+        insert_subscription_days(mess.from_user.username, 1)
+        print("платеж 300")
+        conn.commit()
+    elif mess.successful_payment.invoice_payload == '2000_rub':
+        await mess.answer('Оплата получена, объявление поставлено в очередь', reply_markup=main_menu_markup)
+        insert_subscription_days(mess.from_user.username, 7)
+        conn.commit()
+        print("платеж 2000")
+    elif mess.successful_payment.invoice_payload == '8000_rub':
+        await mess.answer("Оплата получена, объявление поставлено в очередь", reply_markup=main_menu_markup)
+        insert_subscription_days(mess.from_user.username, 30)
+        conn.commit()
+        print("платеж 8000")
+
+
+
+
+
+
+
+
