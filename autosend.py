@@ -7,7 +7,7 @@ import aiocron
 from aiogram import Bot, Dispatcher
 import time
 import datetime
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 
 
 from count_day import get_day
@@ -33,7 +33,7 @@ async def autos():
                         if int(group_id) < 0:
                             try:
                                 await bot.send_photo(group_id, photo=picture, caption=text)
-                            except TelegramForbiddenError:
+                            except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
                         else:
                             pass
@@ -41,7 +41,7 @@ async def autos():
                         if int(group_id) < 0:
                             try:
                                 await bot.send_message(group_id, text)
-                            except TelegramForbiddenError:
+                            except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
                         else:
                             pass
