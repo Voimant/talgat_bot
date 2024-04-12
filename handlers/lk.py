@@ -1,8 +1,8 @@
 from aiogram import Router, Bot, F
-from aiogram.filters import Command
+from aiogram.filters import Command, CommandObject
 from aiogram.types import Message, CallbackQuery
 
-from DB.main_db import data_day_subs
+from DB.main_db import data_day_subs, db_del_post
 from config import TOKEN
 from keyboards.keyboards_lk import lk_main_markup
 
@@ -16,6 +16,17 @@ router.message.filter(
 async def get_lk(mess: Message):
     await mess.answer('Личный кабиент', reply_markup=lk_main_markup)
 
+
+@router.message(Command('del'))
+async def get_del_post(mess: Message, command: CommandObject):
+    if mess.from_user.id == 5805441535:
+        try:
+            result = int(command.args)
+            db_del_post(result)
+        except Exception as e:
+            await mess.answer('что то пошло не так, обратитесь к Олегу...')
+    else:
+        pass
 
 @router.callback_query(F.data == 'days_subs')
 async def my_balans(call: CallbackQuery):

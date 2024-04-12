@@ -22,7 +22,8 @@ async def autos():
     while True:
         posts = data_output_subs()
         for post in posts:
-            text = post['text']
+            text = (f"{post['text']}\n"
+                    f"<post_id : {post['chat_id']}>")
             picture = post['media']
             link = post['link']
             days = post['subscription_days']
