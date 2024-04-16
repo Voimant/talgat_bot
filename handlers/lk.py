@@ -1,3 +1,5 @@
+import os
+
 from aiogram import Router, Bot, F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message, CallbackQuery
@@ -5,6 +7,8 @@ from aiogram.types import Message, CallbackQuery
 from DB.main_db import data_day_subs, db_del_post
 from config import TOKEN
 from keyboards.keyboards_lk import lk_main_markup
+from aiogram.fsm.context import FSMContext
+from aiogram.filters.state import State, StatesGroup
 
 router = Router()
 bot = Bot(token=TOKEN)
@@ -34,3 +38,19 @@ async def get_del_post(mess: Message, command: CommandObject):
 async def my_balans(call: CallbackQuery):
     days = data_day_subs(call.from_user.username)
     await call.message.answer(str(days))
+
+
+@router.message(Command('restart'))
+async def c_restart(mess:Message, state: FSMContext):
+    if mess.from_user.id in [5805441535, 423947942]:
+        os.system('systemctl restart bot.service')
+    else:
+        await mess.answer('Вы не являетесь Администратором')
+
+
+@router.message(Command('stop'))
+async def c_restart(mess:Message, state: FSMContext):
+    if mess.from_user.id in [5805441535, 423947942]:
+        os.system('systemctl stop autosend2.service')
+    else:
+        await mess.answer('Вы не являетесь Администратором')
