@@ -12,6 +12,7 @@ router.message.filter(
     F.chat.type == "private"
 )
 
+
 @router.message(Command('lk'))
 async def get_lk(mess: Message):
     await mess.answer('Личный кабиент', reply_markup=lk_main_markup)
@@ -19,14 +20,15 @@ async def get_lk(mess: Message):
 
 @router.message(Command('del'))
 async def get_del_post(mess: Message, command: CommandObject):
-    if mess.from_user.id == 5805441535:
+    if mess.from_user.id in [5805441535, 423947942]:
         try:
             result = int(command.args)
             db_del_post(result)
         except Exception as e:
             await mess.answer('что то пошло не так, обратитесь к Олегу...')
     else:
-        pass
+        await mess.answer('Команда /del, может использовать только администратор')
+
 
 @router.callback_query(F.data == 'days_subs')
 async def my_balans(call: CallbackQuery):

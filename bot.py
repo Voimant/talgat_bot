@@ -12,7 +12,7 @@ async def main():
     dp = Dispatcher()
     dp.include_routers(start_handlers.router, main_handlers.router, pay.router, lk.router,
                        one_message_handlers.router, seven_day_message.router, month_day_message.router,
-                       update_post.router, admin.router,new_group.router)
+                       update_post.router, admin.router, new_group.router)
     logging.basicConfig(level=logging.INFO)
     await dp.start_polling(bot)
 #ff
