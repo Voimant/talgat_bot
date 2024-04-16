@@ -52,5 +52,6 @@ async def c_restart(mess:Message, state: FSMContext):
 async def c_restart(mess:Message, state: FSMContext):
     if mess.from_user.id in [5805441535, 423947942]:
         os.system('systemctl stop autosend2.service')
+        await mess.answer('бот перезапущен')
     else:
         await mess.answer('Вы не являетесь Администратором')
