@@ -25,11 +25,10 @@ async def get_lk(mess: Message):
 @router.message(Command('del'))
 async def get_del_post(mess: Message, command: CommandObject):
     if mess.from_user.id in [5805441535, 423947942]:
-        try:
-            result = int(command.args)
-            db_del_post(result)
-        except Exception as e:
-            await mess.answer('что то пошло не так, обратитесь к Олегу...')
+        result = int(command.args)
+        db_del_post(result)
+        # except Exception as e:
+        #     await mess.answer('что то пошло не так, обратитесь к Олегу...')
     else:
         await mess.answer('Команда /del, может использовать только администратор')
 
@@ -52,6 +51,5 @@ async def c_restart(mess:Message, state: FSMContext):
 async def c_restart(mess:Message, state: FSMContext):
     if mess.from_user.id in [5805441535, 423947942]:
         os.system('systemctl stop autosend2.service')
-        await mess.answer('бот перезапущен')
     else:
         await mess.answer('Вы не являетесь Администратором')
