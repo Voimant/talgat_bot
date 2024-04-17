@@ -29,6 +29,7 @@ async def get_del_post(mess: Message, command: CommandObject):
         db_del_post(result)
         # except Exception as e:
         #     await mess.answer('что то пошло не так, обратитесь к Олегу...')
+        await mess.answer(f'Пост: {str(result)} удален')
     else:
         await mess.answer('Команда /del, может использовать только администратор')
 

@@ -305,5 +305,5 @@ conn.commit()
 def db_del_post(post_id):
     """Удаляем по chat_id пост"""
     with conn.cursor() as cur:
-        cur.execute("""DELETE FROM data_subscriptions WHERE chat_id = {}""").format(int(post_id))
+        cur.execute("""DELETE FROM data_subscriptions WHERE chat_id = {}""".format(int(post_id)))
         conn.commit()
