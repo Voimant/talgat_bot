@@ -30,7 +30,7 @@ async def autos():
             print(days)
             if days > 0:
                 for group_id in list_group_id():
-                    try:
+                    if post['type_file'] == 'photo':
                         if int(group_id) < 0:
                             try:
                                 await bot.send_photo(group_id, photo=picture, caption=text)
@@ -38,7 +38,7 @@ async def autos():
                                 pass
                         else:
                             pass
-                    except Exception as e:
+                    elif post['type_file'] == 'text':
                         if int(group_id) < 0:
                             try:
                                 await bot.send_message(group_id, text)
@@ -46,6 +46,13 @@ async def autos():
                                 pass
                         else:
                             pass
+                    elif post['type_file'] == 'video':
+                        if int(group_id) < 0:
+                            try:
+                                await bot.send_video(group_id,video=picture, caption=text)
+                            except (TelegramForbiddenError, TelegramBadRequest):
+                                pass
+
                 time.sleep(350) # Интервал между объявлениями
             else:
                 pass

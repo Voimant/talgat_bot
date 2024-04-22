@@ -14,7 +14,7 @@ lk_main = [
 lk_main_markup = InlineKeyboardMarkup(inline_keyboard=lk_main)
 
 subs_form_1 = [[InlineKeyboardButton(text='Опубликовать объявление c картинкой', callback_data='update_with_photo')],
-            [InlineKeyboardButton(text='Опубликовать объявление без картинки', callback_data='update_non_media_pablic')],
+            # [InlineKeyboardButton(text='Опубликовать объявление без картинки', callback_data='update_non_media_pablic')],
              [InlineKeyboardButton(text='Информация о публикациях', callback_data='pablic_info')],
 ]
 

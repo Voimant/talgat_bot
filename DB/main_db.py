@@ -107,7 +107,7 @@ def list_username():
 # print(list_chat_id())
 
 
-def add_data(user_name: str, text: str, media: str, link: str, subscription_days: int, chat_id: int):
+def add_data(user_name: str, text: str, media: str, link: str, subscription_days: int, chat_id: int, types_file: str):
     """
     Функция заполнения таблицы данных по подписке
     :param chat_id:
@@ -116,12 +116,13 @@ def add_data(user_name: str, text: str, media: str, link: str, subscription_days
     :param media: изображение
     :param link: ссылка
     :param subscription_days: количество дней подписки
+    :param types_file: тип медиа объявления
     :return:
     """
     with conn.cursor() as cur:
-        insert_query = """INSERT INTO data_subscriptions(user_name, text, media, link, subscription_days, chat_id)
-                                          VALUES (%s, %s, %s, %s, %s, %s)"""
-        cur.execute(insert_query, (user_name, text, media, link, subscription_days, chat_id))
+        insert_query = """INSERT INTO data_subscriptions(user_name, text, media, link, subscription_days, chat_id, type_file)
+                                          VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+        cur.execute(insert_query, (user_name, text, media, link, subscription_days, chat_id, types_file))
         cur.execute("""SELECT subscription_days FROM data_subscriptions WHERE user_name = %s""", (user_name,))
         a = list(cur.fetchone())
         return f'Подписка оформлена {a} на дней'
@@ -136,7 +137,7 @@ us_sub_days = 7
 conn.commit()
 
 
-def add_data_two(user_name: str, text: str, subscription_days: int, chat_id: int):
+def add_data_two(user_name: str, text: str, subscription_days: int, chat_id: int, type_file: str):
     """
     Функция заполнения таблицы данных по подписке
     :param chat_id:
@@ -146,9 +147,9 @@ def add_data_two(user_name: str, text: str, subscription_days: int, chat_id: int
     :return:
     """
     with conn.cursor() as cur:
-        insert_query = """INSERT INTO data_subscriptions(user_name, text, subscription_days, chat_id)
-                                          VALUES (%s, %s, %s, %s)"""
-        cur.execute(insert_query, (user_name, text, subscription_days, chat_id))
+        insert_query = """INSERT INTO data_subscriptions(user_name, text, subscription_days, chat_id, type_file)
+                                          VALUES (%s, %s, %s, %s, s%)"""
+        cur.execute(insert_query, (user_name, text, subscription_days, chat_id, type_file))
         # cur.execute("""SELECT subscription_days FROM data_subscriptions WHERE user_name = %s""", (user_name,))
         # a = list(cur.fetchone())
         return f'данные внесены'
@@ -305,5 +306,8 @@ conn.commit()
 def db_del_post(post_id):
     """Удаляем по chat_id пост"""
     with conn.cursor() as cur:
-        cur.execute("""DELETE FROM data_subscriptions WHERE chat_id = {}""".format(int(post_id)))
-        conn.commit()
+        try:
+            cur.execute("""DELETE FROM data_subscriptions WHERE chat_id = {}""".format(int(post_id)))
+            conn.commit()
+        except Exception as e:
+            conn.close()

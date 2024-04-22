@@ -22,7 +22,7 @@ groups_button = [
 group_markup = InlineKeyboardMarkup(inline_keyboard=groups_button)
 
 subs_form = [[InlineKeyboardButton(text='Опубликовать объявление c картинкой', callback_data='post_pablic_with_photo')],
-            [InlineKeyboardButton(text='Опубликовать объявление без картинки', callback_data='post_pablic')],
+            # [InlineKeyboardButton(text='Опубликовать объявление без картинки', callback_data='post_pablic')],
              [InlineKeyboardButton(text='Информация о публикациях', callback_data='pablic_info')]]
 subs_form_markup = InlineKeyboardMarkup(inline_keyboard=subs_form)
 

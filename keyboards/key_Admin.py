@@ -13,7 +13,7 @@ admin_markup = InlineKeyboardMarkup(inline_keyboard=admin_button)
 subs_form_2 = [[InlineKeyboardButton(text='Опубликовать объявление c картинкой', callback_data='admin_with_photo')],
             [InlineKeyboardButton(text='Опубликовать объявление без картинки', callback_data='admin_non_media_pablic')],
              [InlineKeyboardButton(text='Информация о публикациях', callback_data='pablic_info')],
-        [InlineKeyboardButton(text='Опубликовать объявление c видео', callback_data='admin_with_photo')],
+        [InlineKeyboardButton(text='Опубликовать объявление c видео', callback_data='admin_with_video')],
 ]
 
 subs_form_markup_2 = InlineKeyboardMarkup(inline_keyboard=subs_form_2)

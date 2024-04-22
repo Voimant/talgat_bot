@@ -69,7 +69,8 @@ async def go_one(call: CallbackQuery, state: FSMContext):
             photo = data['picture']
             text = data['text']
             chat_id = call.message.chat.id
-            add_data(username, text, photo, 'no link', 0, chat_id)
+            file_type = 'photo'
+            add_data(username, text, photo, 'no link', 0, chat_id, file_type)
             conn.commit()
             await call.message.answer('Объявление готово к старту,'
                                       ' на сколько дней хотите опубликовать объявление?', reply_markup=podpiaki_markup)
@@ -120,7 +121,8 @@ async def go_one(call: CallbackQuery, state: FSMContext):
             print(text)
             print(username)
             print(0)
-            add_data_two(username, text, 0, chat_id)
+            file_type = 'text'
+            add_data_two(username, text, 0, chat_id, file_type)
             conn.commit()
             await call.message.answer('Объявление готово к старту,'
                                           ' на сколько дней хотите опубликовать объявление?', reply_markup=podpiaki_markup)

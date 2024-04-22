@@ -43,6 +43,16 @@ with psycopg2.connect(user="root",
             cur.execute(delete_query)
             return 'Таблицы удалены'
 
+    def add_column_db():
+        """
+        Функция, удаляющая таблицы базы данных
+        :return: База данных удалена
+        """
+        with conn.cursor() as cur:
+            add_query = """ALTER TABLE data_subscriptions ADD COLUMN type_file TEXT"""
+            cur.execute(add_query)
+            return 'Колонка добавлена'
 
-    #print(delete_db())
+
+    print(add_column_db())
     conn.commit()

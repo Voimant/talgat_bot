@@ -32,16 +32,22 @@ async def get_photo_unphoto(call: CallbackQuery):
 class Fadmin(StatesGroup):
     text = State()
     picture_admin = State()
+    video_admin = State()
     check = State()
     subs_day = State()
     sender_admin = State()
+
+
+@router.callback_query(F.data == 'admin_with_video')
+async def get_one_message(call: CallbackQuery, state: FSMContext):
+    await call.message.answer('Введите текст объявления', reply_markup=cancel_markup)
+    await state.set_state(Fadmin.text)
 
 
 @router.callback_query(F.data == 'admin_with_photo')
 async def get_one_message(call: CallbackQuery, state: FSMContext):
     await call.message.answer('Введите текст объявления', reply_markup=cancel_markup)
     await state.set_state(Fadmin.text)
-
 
 @router.message(Fadmin.text)
 async def get_text_1(mess: Message, state: FSMContext):
@@ -69,13 +75,11 @@ async def get_picture_1(mess: Message, state: FSMContext):
     await state.set_state(Fadmin.subs_day)
 
 
-
 @router.callback_query(Fadmin.subs_day)
 async def get_subs_day(call: CallbackQuery, state: FSMContext):
     await state.update_data(subs_day=call.data)
     await call.message.answer('нажмите отправить если клиент оплатил и вы готовы начать рассылку', reply_markup=send_canc_markup_admin)
     await state.set_state(Fadmin.sender_admin)
-
 
 
 @router.callback_query(Fadmin.sender_admin)
@@ -89,7 +93,8 @@ async def go_one(call: CallbackQuery, state: FSMContext):
             text = data['text']
             subs_days= int(data['subs_day'])
             chat_id = call.message.chat.id
-            add_data(username, text, photo, 'no link', subs_days, x)
+            type_file = 'photo'
+            add_data(username, text, photo, 'no link', subs_days, x, type_file)
             conn.commit()
             await call.message.answer('Объявление опубликованно', reply_markup=admin_markup)
         else:
@@ -102,6 +107,7 @@ async def go_one(call: CallbackQuery, state: FSMContext):
 
 # @router.message(Fsmone.check)
 # async def get_check(mess: Message, state: FSMContext):
+
 
 class Fadmin_2(StatesGroup):
     text = State()
@@ -148,7 +154,8 @@ async def go_one(call: CallbackQuery, state: FSMContext):
             print(text)
             print(username)
             print(0)
-            add_data_two(username, text, subs_day, x)
+            type_file = 'text'
+            add_data_two(username, text, subs_day, x, type_file)
             conn.commit()
             await call.message.answer('Объявление опубликованно', reply_markup=admin_markup)
         else:
@@ -158,4 +165,75 @@ async def go_one(call: CallbackQuery, state: FSMContext):
         await call.message.answer('Возможно вы уже создали ообъявление, либо проверьте правильность заполнения'
                                   'если вы хотите продлить подписку или изменить объявление зайдите в личный кабинет'
                                   'через кнопку Menu/Меню', reply_markup=admin_markup)
+        await state.clear()
+
+
+class Fadmin_3(StatesGroup):
+    text = State()
+    video_admin = State()
+    check = State()
+    subs_day = State()
+    sender_admin = State()
+
+
+@router.callback_query(F.data == 'admin_with_video')
+async def get_one_message(call: CallbackQuery, state: FSMContext):
+    await call.message.answer('Введите текст объявления', reply_markup=cancel_markup)
+    await state.set_state(Fadmin_3.text)
+
+
+@router.message(Fadmin_3.text)
+async def get_text_2(mess: Message, state: FSMContext):
+    try:
+        await state.update_data(text=mess.text)
+        await mess.answer('Отправте картинку', reply_markup=cancel_markup)
+        await state.set_state(Fadmin_3.video_admin)
+    except Exception as e:
+        await mess.answer('Что то пошло не так, начните заново')
+        await state.clear()
+
+
+@router.message(Fadmin_3.video_admin)
+async def get_video(mess: Message, state: FSMContext):
+    try:
+        x = mess.video[-1].file_id
+    except Exception as e:
+        await mess.answer('Нажмите на скрепку и прикрепите фото для объявления', reply_markup=cancel_markup)
+        await state.set_state(Fadmin.video_admin)
+    await state.update_data(video_admin=mess.video[-1].file_id)
+    data = await state.get_data()
+    await mess.answer_video(video=data['picture_admin'], caption=data['text'])
+    await mess.answer(f'Проверьте правильность объявления и укажите на сколько дней делаем рассылку',
+                      reply_markup=subs_day_markup)
+    await state.set_state(Fadmin_3.subs_day)
+
+
+@router.callback_query(Fadmin_3.subs_day)
+async def get_subs_day_2(call: CallbackQuery, state: FSMContext):
+    await state.update_data(subs_day=call.data)
+    await call.message.answer('нажмите отправить если клиент оплатил и вы готовы начать рассылку', reply_markup=send_canc_markup_admin)
+    await state.set_state(Fadmin_3.sender_admin)
+
+
+@router.callback_query(Fadmin_3.sender_admin)
+async def go_one_1(call: CallbackQuery, state: FSMContext):
+    x = random.randint(1, 10000000000)
+    try:
+        if call.data == 'send_1':
+            data = await state.get_data()
+            username = call.from_user.username
+            video = data['video_admin']
+            text = data['text']
+            subs_days= int(data['subs_day'])
+            chat_id = call.message.chat.id
+            type_file = 'video'
+            add_data(username, text, video, 'no link', subs_days, x, type_file)
+            conn.commit()
+            await call.message.answer('Объявление опубликованно', reply_markup=admin_markup)
+        else:
+            await state.clear()
+    except Exception as e:
+        print(e)
+        await call.message.answer('Внимательно заполните объявления следуя инструкциям. На '
+                                  'место картинки нужно поместить графический файл', reply_markup=admin_markup)
         await state.clear()

@@ -62,7 +62,8 @@ async def go_one(call: CallbackQuery, state: FSMContext):
             username = call.from_user.username
             photo = data['picture']
             text = data['text']
-            add_data(username, text, photo, 'no link', 7)
+            file_type = 'photo'
+            add_data(username, text, photo, 'no link', 7, file_type)
             conn.commit()
             await call.message.answer('Объявление запущено')
         else:
