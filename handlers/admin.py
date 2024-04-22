@@ -186,7 +186,7 @@ async def get_one_message(call: CallbackQuery, state: FSMContext):
 async def get_text_2(mess: Message, state: FSMContext):
     try:
         await state.update_data(text=mess.text)
-        await mess.answer('Отправте картинку', reply_markup=cancel_markup)
+        await mess.answer('Нажмите на скрепку, выберете видео', reply_markup=cancel_markup)
         await state.set_state(Fadmin_3.video_admin)
     except Exception as e:
         await mess.answer('Что то пошло не так, начните заново')
@@ -196,11 +196,11 @@ async def get_text_2(mess: Message, state: FSMContext):
 @router.message(Fadmin_3.video_admin)
 async def get_video(mess: Message, state: FSMContext):
     try:
-        x = mess.video[-1].file_id
+        x = mess.video.file_id
     except Exception as e:
         await mess.answer('Нажмите на скрепку и прикрепите фото для объявления', reply_markup=cancel_markup)
         await state.set_state(Fadmin.video_admin)
-    await state.update_data(video_admin=mess.video[-1].file_id)
+    await state.update_data(video_admin=mess.video.file_id)
     data = await state.get_data()
     await mess.answer_video(video=data['picture_admin'], caption=data['text'])
     await mess.answer(f'Проверьте правильность объявления и укажите на сколько дней делаем рассылку',
