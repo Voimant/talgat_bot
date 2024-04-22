@@ -54,5 +54,5 @@ with psycopg2.connect(user="root",
             return 'Колонка добавлена'
 
 
-    print(add_column_db())
+   # print(add_column_db())
     conn.commit()
