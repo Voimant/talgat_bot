@@ -196,7 +196,7 @@ async def get_video(mess: Message, state: FSMContext):
         await state.set_state(Fadmin.video_admin)
     await state.update_data(video_admin=mess.video.file_id)
     data = await state.get_data()
-    await mess.answer_video(video=data['picture_admin'], caption=data['text'])
+    await mess.answer_video(video=data['video_admin'], caption=data['text'])
     await mess.answer(f'Проверьте правильность объявления и укажите на сколько дней делаем рассылку',
                       reply_markup=subs_day_markup)
     await state.set_state(Fadmin_3.subs_day)
