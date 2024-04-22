@@ -148,7 +148,7 @@ def add_data_two(user_name: str, text: str, subscription_days: int, chat_id: int
     """
     with conn.cursor() as cur:
         insert_query = """INSERT INTO data_subscriptions(user_name, text, subscription_days, chat_id, type_file)
-                                          VALUES (%s, %s, %s, %s, s%)"""
+                                          VALUES (%s, %s, %s, %s, %s)"""
         cur.execute(insert_query, (user_name, text, subscription_days, chat_id, type_file))
         # cur.execute("""SELECT subscription_days FROM data_subscriptions WHERE user_name = %s""", (user_name,))
         # a = list(cur.fetchone())
