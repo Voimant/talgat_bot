@@ -38,12 +38,6 @@ class Fadmin(StatesGroup):
     sender_admin = State()
 
 
-@router.callback_query(F.data == 'admin_with_video')
-async def get_one_message(call: CallbackQuery, state: FSMContext):
-    await call.message.answer('Введите текст объявления', reply_markup=cancel_markup)
-    await state.set_state(Fadmin.text)
-
-
 @router.callback_query(F.data == 'admin_with_photo')
 async def get_one_message(call: CallbackQuery, state: FSMContext):
     await call.message.answer('Введите текст объявления', reply_markup=cancel_markup)
