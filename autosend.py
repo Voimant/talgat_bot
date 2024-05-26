@@ -1,4 +1,6 @@
 import asyncio
+import os
+
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
@@ -7,8 +9,7 @@ import aiocron
 from aiogram import Bot, Dispatcher
 import time
 import datetime
-from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
-
+from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest, TelegramRetryAfter
 
 from count_day import get_day
 from db_func import conn
@@ -44,19 +45,24 @@ async def autos():
                                 await bot.send_message(group_id, text)
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
+                            except Exception as e:
+                                await bot.send_message(423947942, str(e))
                         else:
                             pass
                     elif post['type_file'] == 'video':
                         if int(group_id) < 0:
                             try:
-                                await bot.send_video(group_id,video=picture, caption=text)
+                                await bot.send_video(group_id, video=picture, caption=text)
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
+                            except Exception as e:
+                                await bot.send_message(-4134815982, str(e))
+                                os.system('systemctl stop autosend2.service')
 
-                time.sleep(350) # Интервал между объявлениями
+                time.sleep(350)  # Интервал между объявлениями
             else:
                 pass
-        time.sleep(18000) # рассылка объявления раз в 5 часов
+        time.sleep(18000)  # рассылка объявления раз в 5 часов
         pass
 
 
