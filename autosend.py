@@ -37,6 +37,8 @@ async def autos():
                                 await bot.send_photo(group_id, photo=picture, caption=text)
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
+                            except Exception as e:
+                                await bot.send_message(423947942, str(e))
                         else:
                             pass
                     elif post['type_file'] == 'text':
@@ -46,7 +48,8 @@ async def autos():
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
                             except Exception as e:
-                                await bot.send_message(423947942, str(e))
+                                await bot.send_message(423947942, f'{str(e)}  {group_id}')
+                                os.system('systemctl stop autosend2.service')
                         else:
                             pass
                     elif post['type_file'] == 'video':
@@ -56,7 +59,7 @@ async def autos():
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
                             except Exception as e:
-                                await bot.send_message(-4134815982, str(e))
+                                await bot.send_message(423947942, f'{str(e)}  {group_id}')
                                 os.system('systemctl stop autosend2.service')
 
                 time.sleep(350)  # Интервал между объявлениями
