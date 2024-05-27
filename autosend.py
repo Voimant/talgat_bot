@@ -50,7 +50,8 @@ async def autos():
                                 pass
                             except TelegramRetryAfter as e:
                                 await bot.send_message(423947942, f'{str(e)}  {group_id}')
-                                os.system('systemctl stop autosend2.service')
+                                logging.info(f'Это пиздец товарищи: {e}')
+
                         else:
                             pass
                     elif post['type_file'] == 'video':
@@ -62,8 +63,6 @@ async def autos():
                             except TelegramRetryAfter as e:
                                 await bot.send_message(423947942, f'{str(e)}  {group_id}')
                                 logging.info(f'Это пиздец товарищи: {e}')
-                                os.system('systemctl stop autosend2.service')
-
                 time.sleep(350)  # Интервал между объявлениями
             else:
                 pass
