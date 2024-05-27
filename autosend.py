@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 
 from aiogram import Router, F
@@ -37,7 +38,7 @@ async def autos():
                                 await bot.send_photo(group_id, photo=picture, caption=text)
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
-                            except Exception as e:
+                            except TelegramRetryAfter as e:
                                 await bot.send_message(423947942, str(e))
                         else:
                             pass
@@ -47,7 +48,7 @@ async def autos():
                                 await bot.send_message(group_id, text)
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
-                            except Exception as e:
+                            except TelegramRetryAfter as e:
                                 await bot.send_message(423947942, f'{str(e)}  {group_id}')
                                 os.system('systemctl stop autosend2.service')
                         else:
@@ -58,8 +59,9 @@ async def autos():
                                 await bot.send_video(group_id, video=picture, caption=text)
                             except (TelegramForbiddenError, TelegramBadRequest):
                                 pass
-                            except Exception as e:
+                            except TelegramRetryAfter as e:
                                 await bot.send_message(423947942, f'{str(e)}  {group_id}')
+                                logging.info(f'Это пиздец товарищи: {e}')
                                 os.system('systemctl stop autosend2.service')
 
                 time.sleep(350)  # Интервал между объявлениями
